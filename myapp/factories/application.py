@@ -1,7 +1,6 @@
-# -*- encoding: utf-8 -*-
 from flask import Flask
 from .configuration import get_config
-from controllers import home
+from myapp.controllers import home
 
 
 def create_application():

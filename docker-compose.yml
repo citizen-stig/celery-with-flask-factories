@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:4.0
+  app:
+    build: .
+    environment:
+      - C_FORCE_ROOT=true
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - FLASK_HOST=0.0.0.0
+    links:
+      - redis
+    depends_on:
+      - redis
+    expose:
+      - 5000
+    ports:
+      - "127.0.0.01:5000:5000"
+  celery_worker:
+    build: .
+    environment:
+      - C_FORCE_ROOT=true
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    links:
+      - redis
+    depends_on:
+      - redis
+    command: bin/start_worker.sh
