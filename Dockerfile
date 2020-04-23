@@ -1,14 +1,12 @@
-FROM python:3
+FROM python:3.7
 
 MAINTAINER nikolay.v.golub@gmail.com
+
+ENV PIP_NO_CACHE_DIR=on
 
 COPY . /app
 WORKDIR /app
 
-#RUN pip install pipenv
-#
-#RUN pipenv install --system --deploy
+RUN pipenv install --system --deploy
 
-RUN pip install --no-cache-dir -r requirements.txt
-
-CMD ["python",  "app.py"]
+CMD ["pipenv", "run", "python",  "app.py"]

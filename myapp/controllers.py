@@ -1,6 +1,5 @@
 from flask import Blueprint
 from . import tasks
-from .extenstions import celery
 home = Blueprint('home_views', __name__)
 
 

@@ -1,4 +1,4 @@
-from ..extenstions import celery
+from ..extensions import celery
 
 
 def config_to_celery_kwargs(config):
