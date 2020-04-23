@@ -1,32 +1,32 @@
-from ..extensions import celery
+from celery import Celery
+from celery.app.task import Task as CeleryTask
+from flask import Flask
+
+from myapp import extensions
 
 
-def config_to_celery_kwargs(config):
-    return {
-        k.replace('CELERY_', '').lower(): v
-        for k, v in dict(config).items()
-        if k.startswith('CELERY')
-    }
+def configure_celery(app: Flask) -> Celery:
+    """Configures celery instance from app, using it's config"""
+    TaskBase: CeleryTask = extensions.celery.Task
 
-
-def create_celery(app):
-    """
-    Configures celery instance from application, using it's config
-    :param app: Flask application instance
-    :return: Celery instance
-    """
-
-    TaskBase = celery.Task
-
-    class ContextTask(TaskBase):
+    class ContextTask(TaskBase):    # pylint: disable=too-few-public-methods
         abstract = True
 
         def __call__(self, *args, **kwargs):
             with app.app_context():
                 return TaskBase.__call__(self, *args, **kwargs)
-    celery_config = config_to_celery_kwargs(app.config)
-    print('Celery config: ', celery_config)
-    celery.conf.update(**celery_config)
-    print('Celery broker: ' + str(celery.conf.get('broker_url')))
-    celery.Task = ContextTask
-    return celery
+
+    # https://docs.celeryproject.org/en/stable/userguide/configuration.html
+    extensions.celery.conf.update(
+        broker_url=app.config['CELERY_BROKER_URL'],
+        result_backend=app.config['CELERY_RESULT_BACKEND'],
+        accept_content=app.config['CELERY_ACCEPT_CONTENT'],
+        task_serializer=app.config['CELERY_TASK_SERIALIZER'],
+        result_serializer=app.config['CELERY_TASK_SERIALIZER'],
+        worker_hijack_root_logger=False,
+        beat_schedule=app.config.get('CELERYBEAT_SCHEDULE', {}),
+        worker_redirect_stdouts_level='ERROR',
+        task_always_eager=app.config.get('CELERY_ALWAYS_EAGER', False)
+    )
+    extensions.celery.Task = ContextTask
+    return extensions.celery

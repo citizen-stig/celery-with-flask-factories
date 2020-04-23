@@ -7,6 +7,7 @@ ENV PIP_NO_CACHE_DIR=on
 COPY . /app
 WORKDIR /app
 
-RUN pipenv install --system --deploy
+RUN pip3 install pipenv && \
+    pipenv install --system --deploy
 
-CMD ["pipenv", "run", "python",  "app.py"]
+CMD ["python", "app.py"]

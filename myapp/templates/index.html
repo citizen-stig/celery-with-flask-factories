@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Celery Example</title>
+</head>
+<body>
+<h1>Hello</h1>
+<p>This is example for Celery factories in Flask</p>
+{% if task_id %}
+    <p>Task has been submitted:
+        <a href="{{ url_for('home_views.task_result', task_id=task_id) }}">{{ task_id }}</a>
+    </p>
+{% endif %}
+<p>Submit new task!</p>
+<form method="POST">
+    <label for="message">Message:</label><br>
+    <input type="text" id="message" name="message"
+           placeholder="Message to celery task"><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

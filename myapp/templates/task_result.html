@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result for {{ task_id }}</title>
+</head>
+<body>
+<h1>Result for {{ task_id }}</h1>
+{% if result.ready() %}
+<p>Result is: "{{ result.get() }}"</p>
+{% else %}
+<p>Result is not ready yest. Please refresh</p>
+{% endif %}
+</body>
+</html>
