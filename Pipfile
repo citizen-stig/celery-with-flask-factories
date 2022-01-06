@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-celery = "==4.4.2"
+celery = "==5.2.2"
 redis = "==3.4.1"
 Flask = "==1.1.2"
 
